@@ -1,37 +1,62 @@
 package com.melolingo.app.security;
 
-import com.melolingo.app.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.Collections;
+@Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends AbstractHttpConfigurer<WebSecurityConfig, HttpSecurity> {
+public class WebSecurityConfig {
+    private final PasswordEncoder passwordEncoder;
+    private final UserDetailsService userDetailsService;
+    private final TokenProvider tokenProvider;
+    @Autowired private JwtAuthFilter jwtAuthFilter;
 
-    @Autowired
-    private UserService userService;
+    // Inject PasswordEncoder, UserDetailsService & TokenProvider dependencies via constructor
+    public WebSecurityConfig(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, TokenProvider tokenProvider)
+    {
+        this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
+        this.tokenProvider = tokenProvider;
+    }
 
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
+    // Configure HTTP security settings
+    @Bean public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(authz -> authz
-                        .requestMatchers("/api/users/register").permitAll()
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/api/**"))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/users/login", "/api/users/register").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
-                .httpBasic(AbstractHttpConfigurer::disable);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+    // Configure DaoAuthentication Provider
+    @Bean public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+
+        return provider;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    // Configure AuthenticationManager
+    @Bean public AuthenticationManager authenticationManager() {
+        return new ProviderManager(Collections.singletonList
+                (daoAuthenticationProvider()));
     }
 }
