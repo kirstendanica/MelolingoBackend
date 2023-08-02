@@ -39,6 +39,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/users/login", "/api/users/register").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/spotify/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

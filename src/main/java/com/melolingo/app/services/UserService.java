@@ -58,4 +58,8 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
+
+    public PasswordEncoder passwordEncoder() {
+        return this.passwordEncoder;
+    }
 }
