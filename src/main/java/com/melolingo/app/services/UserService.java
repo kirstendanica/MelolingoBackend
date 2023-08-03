@@ -32,6 +32,12 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    // Authenticate user with username and password
+    public boolean authenticate(String username, String password) {
+        User user = userRepo.findByUsername(username);
+        return user != null && passwordEncoder.matches(password, user.getPassword());
+    }
+
     // Register new user account
     public User registerNewUserAccount(String username, String password) {
         if (userRepo.findByUsername(username) != null) {
