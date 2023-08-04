@@ -7,7 +7,8 @@ public class Artist {
     private List<Album> albums;
     public Artist() {
     }
-    public Artist(String id, String name, List<Album> albums) {
+    public Artist(String id, String name, List<Album> albums)
+    {
         this.id = id;
         this.name = name;
         this.albums = albums;
@@ -15,7 +16,8 @@ public class Artist {
     public String getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(String id)
+    {
         this.id = id;
     }
     public String getName() {
@@ -28,7 +30,8 @@ public class Artist {
     public List<Album> getAlbums() {
         return albums;
     }
-    public void setAlbums(List<Album> albums) {
+    public void setAlbums(List<Album> albums)
+    {
         this.albums = albums;
     }
 }

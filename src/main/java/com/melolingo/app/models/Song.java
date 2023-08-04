@@ -22,7 +22,8 @@ public class Song {
     public Song() {
     }
 
-    public Song(String title, String artist, String album, String genre, String spotifyId, int duration, int popularity, Date releaseDate) {
+    public Song(String title, String artist, String album, String genre, String spotifyId, int duration, int popularity, Date releaseDate)
+    {
         this.title = title;
         this.artist = artist;
         this.album = album;
@@ -37,7 +38,8 @@ public class Song {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
@@ -45,7 +47,8 @@ public class Song {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(String title)
+    {
         this.title = title;
     }
 
@@ -53,7 +56,8 @@ public class Song {
         return artist;
     }
 
-    public void setArtist(String artist) {
+    public void setArtist(String artist)
+    {
         this.artist = artist;
     }
 
@@ -61,7 +65,8 @@ public class Song {
         return album;
     }
 
-    public void setAlbum(String album) {
+    public void setAlbum(String album)
+    {
         this.album = album;
     }
 

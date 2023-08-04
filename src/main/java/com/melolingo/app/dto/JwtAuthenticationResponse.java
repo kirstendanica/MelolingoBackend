@@ -9,7 +9,8 @@ public class JwtAuthenticationResponse {
     @JsonProperty("token_type")
     private String tokenType = "Bearer";
 
-    public JwtAuthenticationResponse(String token) {
+    public JwtAuthenticationResponse(String token)
+    {
         this.token = token;
     }
 }
