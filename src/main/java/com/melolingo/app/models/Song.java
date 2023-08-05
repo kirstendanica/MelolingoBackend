@@ -18,6 +18,11 @@ public class Song {
     private int duration;
     private int popularity;
     private Date releaseDate;
+    private String lyrics;
+
+    public String getLyrics() {
+        return lyrics;
+    }
 
     public Song() {
     }
@@ -73,40 +78,49 @@ public class Song {
     public String getGenre() {
         return genre;
     }
+
     public void setGenre(String genre)
     {
         this.genre = genre;
     }
+
     public String getSpotifyId() {
         return spotifyId;
     }
+
     public void setSpotifyId(String spotifyId)
     {
         this.spotifyId = spotifyId;
     }
+
     public int getDuration() {
         return duration;
     }
+
     public void setDuration(int duration)
     {
         this.duration = duration;
     }
+
     public int getPopularity() {
         return popularity;
     }
+
     public void setPopularity(int popularity)
     {
         this.popularity = popularity;
     }
+
     public Date getReleaseDate() {
         return releaseDate;
     }
+
     public void setReleaseDate(Date releaseDate)
     {
         this.releaseDate = releaseDate;
     }
+
     public String getSpotifyIdAsString() {
         return spotifyId;
     }
-
 }
