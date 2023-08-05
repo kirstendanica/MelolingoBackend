@@ -16,6 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.Arrays;
 import java.util.List;
 @RestController
 @RequestMapping("/api/users")
@@ -80,5 +83,11 @@ public class UserController {
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Hmm? Invalid login information.");
         }
+    }
+        // Retrieve supported languages (endpoint)
+        @GetMapping("/languages")
+        public ResponseEntity<List<String>> getSupportedLanguages () {
+        List<String> supportedLanguages = Arrays.asList("French", "Spanish", "French", "German", "Chinese", "Russian", "Swedish", "Finnish", "Korean", "Japanese", "Dutch", "Polish");
+        return ResponseEntity.ok(supportedLanguages);
     }
 }
