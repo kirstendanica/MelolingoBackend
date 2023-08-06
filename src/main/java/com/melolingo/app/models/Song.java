@@ -123,4 +123,6 @@ public class Song {
     public String getSpotifyIdAsString() {
         return spotifyId;
     }
+
+    private String language;
 }
