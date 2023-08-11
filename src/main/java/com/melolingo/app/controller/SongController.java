@@ -6,6 +6,7 @@ import com.melolingo.app.services.SpotifyService;
 import com.melolingo.app.services.SongService;
 import com.melolingo.app.services.TranslateService;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import retrofit2.Call;
@@ -14,6 +15,7 @@ import retrofit2.Response;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.ResponseEntity;
@@ -70,5 +72,25 @@ public class SongController {
         lyricsMap.put("translated", translatedLyrics);
 
         return ResponseEntity.ok(lyricsMap);
+    }
+
+    @GetMapping("/recently-played")
+    public ResponseEntity<List<Song>> getRecentlyPlayedSongs() {
+        List<Song> recentlyPlayedSongs = songService.getRecentlyPlayedSongs();
+        return ResponseEntity.ok(recentlyPlayedSongs);
+    }
+
+    @PostMapping("/{songId}/play")
+    public ResponseEntity<String> playSong(@PathVariable Long songId) {
+        Song song = songService.getSongById(songId);
+        if (song == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Update the lastPlayedAt timestamp
+        song.setLastPlayedAt(new Date());
+        songService.saveSong(song);
+
+        return ResponseEntity.ok("Song played successfully.");
     }
 }
