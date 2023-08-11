@@ -8,6 +8,7 @@ import com.melolingo.app.services.TranslateService;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
