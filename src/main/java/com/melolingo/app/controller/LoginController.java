@@ -6,10 +6,13 @@ import com.melolingo.app.services.UserService;
 import com.melolingo.app.security.TokenProvider;
 import com.melolingo.app.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 public class LoginController {
@@ -24,25 +27,28 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthenticationResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         // Authenticate user
         boolean isAuthenticated = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
 
         if (isAuthenticated) {
-            // Find the user object to generate the token
-            User user = userService.findByUsername(loginRequest.getUsername());
-            if (user == null) {
-                return ResponseEntity.status(401).build();
+            // Find user object to generate the token
+            Optional<User> optionalUser = Optional.ofNullable(userService.findByUsername(loginRequest.getUsername()));
+
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                // Generate token for authenticated user
+                String token = tokenProvider.generateToken(user);
+
+                // Return token in response
+                return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+            } else {
+                // Handle case where user is not found
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User not found");
             }
-
-            // Generate the token for the authenticated user
-            String token = tokenProvider.generateToken(user);
-
-            // Return the token in the response
-            return ResponseEntity.ok(new JwtAuthenticationResponse(token));
         } else {
-            // If authentication fails, return an error response
-            return ResponseEntity.status(401).build();
+            // If authentication fails, return error response
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
         }
     }
 }

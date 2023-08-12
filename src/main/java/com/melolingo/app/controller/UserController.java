@@ -5,7 +5,6 @@ import com.melolingo.app.dto.LoginRequest;
 import com.melolingo.app.models.User;
 import com.melolingo.app.security.TokenProvider;
 import com.melolingo.app.services.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,18 +15,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.GetMapping;
-
 import java.util.Arrays;
 import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
     private final UserService userService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
 
-    // Use constructor injection for getting required dependencies
     @Autowired
     public UserController(UserService userService, TokenProvider tokenProvider, AuthenticationManager authenticationManager) {
         this.userService = userService;
@@ -35,14 +33,12 @@ public class UserController {
         this.authenticationManager = authenticationManager;
     }
 
-    // Get all users (endpoint)
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
-    // Get user via username (endpoint)
     @GetMapping("/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.findByUsername(username);
@@ -52,21 +48,18 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    // Create new user (endpoint)
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User savedUser = userService.save(user);
         return ResponseEntity.ok(savedUser);
     }
 
-    // Register new user account (endpoint)
     @PostMapping("/register")
     public ResponseEntity<User> registerNewUserAccount(@RequestBody User user) {
         User registeredUser = userService.registerNewUserAccount(user.getUsername(), user.getPassword());
         return ResponseEntity.ok(registeredUser);
     }
 
-    // User login (endpoint)
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
@@ -81,13 +74,13 @@ public class UserController {
             String jwt = tokenProvider.generateToken(user);
             return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Hmm? Invalid login information.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login information.");
         }
     }
-        // Retrieve supported languages (endpoint)
-        @GetMapping("/languages")
-        public ResponseEntity<List<String>> getSupportedLanguages () {
-        List<String> supportedLanguages = Arrays.asList("French", "Spanish", "French", "German", "Chinese", "Russian", "Swedish", "Finnish", "Korean", "Japanese", "Dutch", "Polish");
+
+    @GetMapping("/languages")
+    public ResponseEntity<List<String>> getSupportedLanguages() {
+        List<String> supportedLanguages = Arrays.asList("French", "Spanish", "German", "Chinese", "Russian", "Swedish", "Finnish", "Korean", "Japanese", "Dutch", "Polish");
         return ResponseEntity.ok(supportedLanguages);
     }
 }

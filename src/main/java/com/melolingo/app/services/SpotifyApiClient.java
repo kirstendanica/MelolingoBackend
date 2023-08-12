@@ -10,10 +10,10 @@ import com.melolingo.app.models.Album;
 import com.melolingo.app.models.Artist;
 import com.melolingo.app.models.Playlist;
 
-
 public class SpotifyApiClient {
     private static final String BASE_URL = "https://api.spotify.com/";
     private static SpotifyService spotifyService;
+
     public SpotifyApiClient() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -22,8 +22,20 @@ public class SpotifyApiClient {
         spotifyService = retrofit.create(SpotifyService.class);
     }
 
-    public Call<SearchResponse> searchSongs(String query, String type) {
-        return spotifyService.searchSongs(query, type);
+    public SearchResponse searchSongs(String query, String type) {
+        try {
+            Call<SearchResponse> call = spotifyService.searchSongs(query, type);
+            retrofit2.Response<SearchResponse> response = call.execute();
+            if (response.isSuccessful()) {
+                return response.body();
+            } else {
+                // Handle error
+                return null;
+            }
+        } catch (Exception e) {
+            // Handle exception
+            return null;
+        }
     }
     public Call<Song> getSong(String songId) {
         return spotifyService.getSong(songId);
