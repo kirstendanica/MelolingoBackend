@@ -2,7 +2,6 @@ package com.melolingo.app.controller;
 
 import com.melolingo.app.dto.LoginRequest;
 import com.melolingo.app.dto.JwtAuthenticationResponse;
-import com.melolingo.app.services.UserService;
 import com.melolingo.app.security.TokenProvider;
 import com.melolingo.app.models.User;
 import org.springframework.beans.factory.annotation.Autowired;

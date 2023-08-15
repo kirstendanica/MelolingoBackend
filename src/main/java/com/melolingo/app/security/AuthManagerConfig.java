@@ -1,6 +1,5 @@
 package com.melolingo.app.security;
 
-import com.melolingo.app.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
