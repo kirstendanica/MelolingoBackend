@@ -1,13 +1,11 @@
 package com.melolingo.app.repo;
 
-import com.melolingo.app.models.Lesson;
-import com.melolingo.app.models.Language;
-import com.melolingo.app.models.Song;
 import com.melolingo.app.models.Artist;
-
+import com.melolingo.app.models.Language;
+import com.melolingo.app.models.Lesson;
+import com.melolingo.app.models.Song;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository

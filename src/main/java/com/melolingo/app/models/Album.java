@@ -4,9 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.OneToMany;
-
-import java.util.List;
 
 @Entity
 public class Album {
@@ -17,17 +14,42 @@ public class Album {
     private String name;
     private String artist;
 
-    @OneToMany(mappedBy = "album")
-    private List<Song> songs;
+    // Spotify data fields
+    private String spotifyId;
+    private String spotifyUri;
+    private String imageUrl;
 
     public Album() {
     }
-
-    public Album(Long id, String name, String artist, List<Song> songs) {
+    public Album(Long id, String name, String artist) {
         this.id = id;
         this.name = name;
         this.artist = artist;
-        this.songs = songs;
+    }
+
+    // Getters & setters (Spotify)
+    public String getSpotifyId() {
+        return spotifyId;
+    }
+
+    public void setSpotifyId(String spotifyId) {
+        this.spotifyId = spotifyId;
+    }
+
+    public String getSpotifyUri() {
+        return spotifyUri;
+    }
+
+    public void setSpotifyUri(String spotifyUri) {
+        this.spotifyUri = spotifyUri;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -52,13 +74,5 @@ public class Album {
 
     public void setArtist(String artist) {
         this.artist = artist;
-    }
-
-    public List<Song> getSongs() {
-        return songs;
-    }
-
-    public void setSongs(List<Song> songs) {
-        this.songs = songs;
     }
 }

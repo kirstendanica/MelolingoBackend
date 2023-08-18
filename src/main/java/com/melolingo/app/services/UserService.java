@@ -1,5 +1,6 @@
 package com.melolingo.app.services;
 
+import com.melolingo.app.dto.ExerciseDto;
 import com.melolingo.app.models.User;
 import com.melolingo.app.repo.UserRepo;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,19 +10,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final ExerciseService exerciseService;
 
-    // Inject UserRepo & PasswordEncoder dependencies via constructor
-    public UserService(UserRepo userRepo, PasswordEncoder passwordEncoder)
-    {
+    public UserService(UserRepo userRepo, PasswordEncoder passwordEncoder, ExerciseService exerciseService) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
+        this.exerciseService = exerciseService;
     }
 
-    // Load user from username
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepo.findByUsername(username);
@@ -32,13 +33,11 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    // Authenticate user with username and password
     public boolean authenticate(String username, String password) {
         User user = userRepo.findByUsername(username);
         return user != null && passwordEncoder.matches(password, user.getPassword());
     }
 
-    // Register new user account
     public User registerNewUserAccount(String username, String password) {
         if (userRepo.findByUsername(username) != null) {
             throw new IllegalArgumentException("Username already taken, sorry!");
@@ -50,12 +49,10 @@ public class UserService implements UserDetailsService {
         return userRepo.save(user);
     }
 
-    // Return all users
     public List<User> getAllUsers() {
         return userRepo.findAll();
     }
 
-    // Find by username & save user
     public User findByUsername(String username) {
         return userRepo.findByUsername(username);
     }
@@ -65,7 +62,7 @@ public class UserService implements UserDetailsService {
         return userRepo.save(user);
     }
 
-    public PasswordEncoder passwordEncoder() {
-        return this.passwordEncoder;
+    public List<ExerciseDto> getExercisesByLanguage(String language) {
+        return exerciseService.getExercisesByLanguage(language);
     }
 }

@@ -12,9 +12,6 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lesson_id")
-    private Lesson lesson;
     private String question;
     @ElementCollection
     private List<String> options;
@@ -26,12 +23,6 @@ public class Quiz {
     }
     public void setId(Long id) {
         this.id = id;
-    }
-    public Lesson getLesson() {
-        return lesson;
-    }
-    public void setLesson(Lesson lesson) {
-        this.lesson = lesson;
     }
     public String getQuestion() {
         return question;

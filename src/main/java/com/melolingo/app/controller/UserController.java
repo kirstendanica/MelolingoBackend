@@ -1,5 +1,6 @@
 package com.melolingo.app.controller;
 
+import com.melolingo.app.services.UserService;
 import com.melolingo.app.dto.JwtAuthenticationResponse;
 import com.melolingo.app.dto.LoginRequest;
 import com.melolingo.app.models.User;

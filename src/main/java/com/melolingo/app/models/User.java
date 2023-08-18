@@ -1,10 +1,13 @@
 package com.melolingo.app.models;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
 import java.util.Collection;
+import java.util.Collections;
+
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -13,6 +16,7 @@ public class User implements UserDetails {
     private Long id;
     private String username;
     private String password;
+    private String roles; // Assuming you have a roles field
 
     // Getters & setters
     public Long getId() {
@@ -22,10 +26,10 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    // Provide permissions given to user (*for future implementation)
+    // Provide permissions given to user
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.roles));
     }
     @Override
     public String getPassword() {
@@ -42,6 +46,13 @@ public class User implements UserDetails {
     public void setUsername(String username)
     {
         this.username = username;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 
     @Override

@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-
 @Entity
 @Table(name = "exercise")
 public class Exercise {
@@ -13,25 +12,17 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lesson_id")
-    private Lesson lesson;
-
     private String question;
     private String options;
     private String correctAns;
+
+    private String language;
 
     public Long getId() {
         return id;
     }
     public void setId(Long id) {
         this.id = id;
-    }
-    public Lesson getLesson() {
-        return lesson;
-    }
-    public void setLesson(Lesson lesson) {
-        this.lesson = lesson;
     }
     public String getQuestion() {
         return question;
@@ -50,5 +41,12 @@ public class Exercise {
     }
     public void setCorrectAns(String correctAns) {
         this.correctAns = correctAns;
+    }
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

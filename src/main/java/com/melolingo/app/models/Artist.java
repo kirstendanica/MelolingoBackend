@@ -3,6 +3,8 @@ package com.melolingo.app.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,15 +13,19 @@ public class Artist {
     @Id
     private String id;
     private String name;
-    private List<Album> albums;
+
+    // Spotify data fields
+    private String spotifyId;
+    private String spotifyUri;
+    private String imageUrl;
+
 
     public Artist() {
     }
 
-    public Artist(String id, String name, List<Album> albums) {
+    public Artist(String id, String name) {
         this.id = id;
         this.name = name;
-        this.albums = albums;
     }
 
     public String getId() {
@@ -38,11 +44,28 @@ public class Artist {
         this.name = name;
     }
 
-    public List<Album> getAlbums() {
-        return albums;
+    // Getters & setters (Spotify)
+    public String getSpotifyId() {
+        return spotifyId;
     }
 
-    public void setAlbums(List<Album> albums) {
-        this.albums = albums;
+    public void setSpotifyId(String spotifyId) {
+        this.spotifyId = spotifyId;
+    }
+
+    public String getSpotifyUri() {
+        return spotifyUri;
+    }
+
+    public void setSpotifyUri(String spotifyUri) {
+        this.spotifyUri = spotifyUri;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
