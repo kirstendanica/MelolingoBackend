@@ -40,4 +40,19 @@ public class Language {
     public void setName(String name) {
         this.name = name;
     }
+    // Define the Language enum
+    public enum LanguageEnum {
+        ENGLISH,
+        SPANISH,
+        FRENCH,
+        RUSSIAN,
+        KOREAN,
+        FINNISH,
+        JAPANESE,
+        MANDARIN,
+        SWEDISH,
+        UKRAINIAN,
+        POLISH,
+        ITALIAN
+    }
 }
