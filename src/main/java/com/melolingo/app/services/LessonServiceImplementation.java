@@ -1,5 +1,7 @@
 package com.melolingo.app.services;
 
+import com.melolingo.app.models.Language;
+import com.melolingo.app.services.LanguageService;
 import com.melolingo.app.models.Lesson;
 import com.melolingo.app.repo.LessonRepo;
 
@@ -10,12 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class LessonServiceImplementation implements LessonService {
+public abstract class LessonServiceImplementation implements LessonService {
     private final LessonRepo lessonRepo;
+    private final LanguageService languageService;
 
     @Autowired
-    public LessonServiceImplementation(LessonRepo lessonRepo) {
+    public LessonServiceImplementation(LessonRepo lessonRepo, LanguageService languageService) {
         this.lessonRepo = lessonRepo;
+        this.languageService = languageService;
     }
 
     @Override
@@ -51,4 +55,13 @@ public class LessonServiceImplementation implements LessonService {
         }
         return false;
     }
+    @Override
+    public List<Lesson> getLessonsByLanguage(Language language) {
+        return lessonRepo.findByLessonLanguage(language);
+    }
 }
+
+
+
+
+

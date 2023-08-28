@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="lesson")
-public class Lesson{
+public class Lesson {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +23,7 @@ public class Lesson{
     private Long songId;
 
     @ManyToOne
+    @JoinColumn(name = "language_id")
     private Language lessonLanguage;
 
     public Long getId() {

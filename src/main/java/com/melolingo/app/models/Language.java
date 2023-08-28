@@ -16,13 +16,18 @@ public class Language {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @NotBlank(message = "Language code is required")
+    @Column(name = "code", nullable = false, unique = true)
+    private String code;
+
     // Constructors, getters, and setters
 
     public Language() {
     }
 
-    public Language(String name) {
+    public Language(String name, String code) {
         this.name = name;
+        this.code = code;
     }
 
     public Long getId() {
@@ -40,6 +45,15 @@ public class Language {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     // Define the Language enum
     public enum LanguageEnum {
         ENGLISH,
