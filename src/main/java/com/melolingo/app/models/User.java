@@ -18,6 +18,7 @@ public class User implements UserDetails {
     private String password;
     private String roles; // Assuming you have a roles field
 
+
     // Getters & setters
     public Long getId() {
         return id;

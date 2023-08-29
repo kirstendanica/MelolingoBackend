@@ -1,7 +1,6 @@
 package com.melolingo.app.services;
 
 import com.melolingo.app.models.Language;
-import com.melolingo.app.services.LanguageService;
 import com.melolingo.app.models.Lesson;
 import com.melolingo.app.repo.LessonRepo;
 
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public abstract class LessonServiceImplementation implements LessonService {
+public class LessonServiceImplementation implements LessonService {
     private final LessonRepo lessonRepo;
     private final LanguageService languageService;
 
@@ -39,10 +38,10 @@ public abstract class LessonServiceImplementation implements LessonService {
     }
 
     @Override
-    public Lesson updateLesson(Long lessonId, Lesson lesson) {
+    public Lesson updateLesson(Long lessonId, Lesson newLessonDetails) {
         if (lessonRepo.existsById(lessonId)) {
-            lesson.setId(lessonId);
-            return lessonRepo.save(lesson);
+            newLessonDetails.setId(lessonId);
+            return lessonRepo.save(newLessonDetails);
         }
         return null;
     }
@@ -55,13 +54,14 @@ public abstract class LessonServiceImplementation implements LessonService {
         }
         return false;
     }
+
     @Override
-    public List<Lesson> getLessonsByLanguage(Language language) {
-        return lessonRepo.findByLessonLanguage(language);
+    public List<Lesson> getLessonsByLanguageCode(String languageCode) {
+        Language language = languageService.findLanguageByCode(languageCode);
+        if (language != null) {
+            return lessonRepo.findByLessonLanguage(language);
+        } else {
+            throw new IllegalArgumentException("No such language: " + languageCode);
+        }
     }
 }
-
-
-
-
-

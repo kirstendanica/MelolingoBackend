@@ -9,6 +9,9 @@ public class Playlist {
     private String id;
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    private Language.LanguageEnum language;
+
     // Spotify data fields
     private String spotifyId;
     private String spotifyUri;

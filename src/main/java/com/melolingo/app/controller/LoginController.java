@@ -5,6 +5,7 @@ import com.melolingo.app.dto.LoginRequest;
 import com.melolingo.app.dto.JwtAuthenticationResponse;
 import com.melolingo.app.security.TokenProvider;
 import com.melolingo.app.models.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,6 @@ import java.util.Optional;
 
 @RestController
 public class LoginController {
-
     private final UserService userService;
     private final TokenProvider tokenProvider;
 
@@ -32,7 +32,7 @@ public class LoginController {
         boolean isAuthenticated = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
 
         if (isAuthenticated) {
-            // Find user object to generate the token
+            // Find user object to generate token
             Optional<User> optionalUser = Optional.ofNullable(userService.findByUsername(loginRequest.getUsername()));
 
             if (optionalUser.isPresent()) {
@@ -40,14 +40,14 @@ public class LoginController {
                 // Generate token for authenticated user
                 String token = tokenProvider.generateToken(user);
 
-                // Return token in response
+                // Return token
                 return ResponseEntity.ok(new JwtAuthenticationResponse(token));
             } else {
                 // Handle case where user is not found
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User not found");
             }
         } else {
-            // If authentication fails, return error response
+            // Return error response in case of application failure
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
         }
     }

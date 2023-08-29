@@ -2,9 +2,7 @@ package com.melolingo.app.controller;
 
 import com.melolingo.app.models.Language;
 import com.melolingo.app.models.Lesson;
-import com.melolingo.app.services.LanguageService;
 import com.melolingo.app.services.LessonService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +13,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/lessons")
 public class LessonController {
+
     private final LessonService lessonService;
-    private final LanguageService languageService;
+
 
     @Autowired
-    public LessonController(LessonService lessonService, LanguageService languageService) {
+    public LessonController(LessonService lessonService) {
         this.lessonService = lessonService;
-        this.languageService = languageService;
     }
 
     @PostMapping
@@ -55,6 +53,7 @@ public class LessonController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @DeleteMapping("/{lessonId}")
     public ResponseEntity<Void> deleteLesson(@PathVariable Long lessonId) {
         boolean deleted = lessonService.deleteLesson(lessonId);
@@ -64,10 +63,15 @@ public class LessonController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping("/language/{language}")
     public ResponseEntity<List<Lesson>> getLessonsByLanguage(@PathVariable String language) {
-        Language languageObject = languageService.findLanguageByCode(language);
-        List<Lesson> lessons = lessonService.getLessonsByLanguage(languageObject);
-        return ResponseEntity.ok(lessons);
+        try {
+            Language.LanguageEnum languageEnum = Language.LanguageEnum.valueOf(language.toUpperCase());
+            List<Lesson> lessons = lessonService.getLessonsByLanguageCode(String.valueOf(languageEnum));
+            return ResponseEntity.ok(lessons);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }
