@@ -40,7 +40,7 @@ public class LessonControllerTest {
     @Test
     public void testGetLessonsByLanguage_ValidLanguage() {
         // Mock the behavior of lessonService method
-        when(lessonService.getLessonsByLanguage(anyString())).thenReturn(mockLessons);
+        when(lessonService.getLessonsByLanguageCode(anyString())).thenReturn(mockLessons);
 
         // Call the controller method
         ResponseEntity<List<Lesson>> response = lessonController.getLessonsByLanguage(Language.LanguageEnum.ENGLISH.name());
