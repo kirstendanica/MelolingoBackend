@@ -6,7 +6,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -16,63 +19,58 @@ public class User implements UserDetails {
     private Long id;
     private String username;
     private String password;
-    private String roles; // Assuming you have a roles field
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 
-    // Getters & setters
+    // Getters & Setters
     public Long getId() {
         return id;
     }
     public void setId(Long id) {
-        this.id = id;
+        this.id=id;
     }
 
-    // Provide permissions given to user
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.roles));
-    }
-    @Override
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password)
-    {
-        this.password = password;
-    }
-    @Override
     public String getUsername() {
         return username;
     }
-    public void setUsername(String username)
-    {
-        this.username = username;
+
+    public void setUsername(String username) {
+        this.username=username;
     }
 
-    public String getRoles() {
-        return roles;
-    }
-    public void setRoles(String roles) {
-        this.roles = roles;
+    public String getPassword() {
+        return password;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
+    public void setPassword(String password) {
+        this.password=password; }
+
+    public Set<Role> getRoles() { return roles; }
+
+    public void setRoles(Set<Role> roles) { this.roles=roles; }
+
+    // Grant permissions to user
+    @Override public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
+    }
+
+    @Override public boolean isAccountNonExpired() {
         return true;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
+    @Override public boolean isAccountNonLocked() {
         return true;
     }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
+    @Override public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    @Override
-    public boolean isEnabled() {
+    @Override public boolean isEnabled(){
         return true;
     }
 }

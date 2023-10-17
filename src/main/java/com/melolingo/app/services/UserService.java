@@ -1,5 +1,7 @@
 package com.melolingo.app.services;
 
+import com.melolingo.app.repo.RoleRepo;
+import com.melolingo.app.models.Role;
 import com.melolingo.app.dto.ExerciseDto;
 import com.melolingo.app.models.User;
 import com.melolingo.app.repo.UserRepo;
@@ -10,16 +12,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepo userRepo;
     private final ExerciseService exerciseService;
 
-    public UserService(UserRepo userRepo, ExerciseService exerciseService) {
+    private final RoleRepo roleRepo;
+    public UserService(UserRepo userRepo, ExerciseService exerciseService, RoleRepo roleRepo) {
         this.userRepo = userRepo;
         this.exerciseService = exerciseService;
+        this.roleRepo = roleRepo;
     }
 
     @Override
@@ -42,11 +48,23 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("Username already taken, sorry!");
         }
         User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
 
-        return userRepo.save(user);
+    // Assign ROLE_USER during user registration by default
+    Role defaultRole = roleRepo.findByName(Role.ERole.ROLE_USER);
+
+    if (defaultRole == null) {
+        throw new IllegalArgumentException("ROLE_USER not found in our database... Please ensure proper set up for roles.");
     }
+
+    Set<Role> roles = new HashSet<>();
+    roles.add(defaultRole);
+
+    user.setRoles(roles);
+     user.setUsername(username);
+     user.setPassword(password);
+
+   return userRepo.save(user);
+}
 
     public List<User> getAllUsers() {
         return userRepo.findAll();
